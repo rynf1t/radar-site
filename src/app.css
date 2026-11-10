@@ -1,0 +1,529 @@
+/*
+ * Tokens. Roles first, values second (see build-craft web-and-visual.md).
+ * Identity comes from site.config.ts: --tint-h nudges every grey, --accent-h
+ * is the one accent and --focus-h keeps focus rings apart from it. The
+ * layout sets all three. The accent's jobs: caret, selection, search hover
+ * and matches, the status dot, one syntax role. Nothing else.
+ */
+:root {
+	--tint-h: 255;
+	--accent-h: 75;
+	--focus-h: 262;
+
+	--ink: oklch(0.2 0.014 var(--tint-h));
+	--paper: oklch(0.975 0.004 var(--tint-h));
+	--surface: oklch(1 0 0);
+	--soft: color-mix(in oklab, var(--ink) 66%, transparent);
+	--muted: oklch(0.66 0.012 var(--tint-h));
+	--faint: color-mix(in oklab, var(--muted) 55%, var(--paper));
+	--rule: color-mix(in oklab, var(--ink) 11%, transparent);
+	--wash: color-mix(in oklab, var(--ink) 5%, transparent);
+	--edge-top: color-mix(in oklab, var(--ink) 5%, transparent);
+	--edge-bottom: color-mix(in oklab, var(--ink) 9%, transparent);
+	--accent: oklch(0.72 0.15 var(--accent-h));
+	--accent-ink: oklch(0.52 0.13 var(--accent-h)); /* the accent where it is text */
+	--focus: oklch(0.56 0.2 var(--focus-h));
+	--focus-wash: color-mix(in oklab, var(--focus) 10%, transparent);
+	--selection: color-mix(in oklab, var(--accent) 45%, var(--paper));
+	--hover: color-mix(in oklab, var(--accent) 12%, var(--surface));
+	--mark: color-mix(in oklab, var(--accent) 32%, transparent);
+
+	--shadow-surface: 0 1px 1px oklch(0.2 0.02 var(--tint-h) / 3%), 0 2px 2px -1px oklch(0.2 0.02 var(--tint-h) / 3%),
+		0 4px 6px -3px oklch(0.2 0.02 var(--tint-h) / 5%);
+	--shadow-raised: 0 0 0 0.5px oklch(0.2 0.02 var(--tint-h) / 6%), 0 1px 1px -0.5px oklch(0.2 0.02 var(--tint-h) / 5%),
+		0 2px 2px -1px oklch(0.2 0.02 var(--tint-h) / 5%), 0 4px 4px -2px oklch(0.2 0.02 var(--tint-h) / 5%),
+		0 8px 8px -4px oklch(0.2 0.02 var(--tint-h) / 4%), 0 16px 16px -8px oklch(0.2 0.02 var(--tint-h) / 4%),
+		0 32px 48px -16px oklch(0.2 0.02 var(--tint-h) / 6%);
+	--shadow-dialog: 0 0 0 1px oklch(0.2 0.02 var(--tint-h) / 7%), 0 1px 1px oklch(0.2 0.02 var(--tint-h) / 3%),
+		0 2px 2px -1px oklch(0.2 0.02 var(--tint-h) / 4%), 0 4px 4px -2px oklch(0.2 0.02 var(--tint-h) / 4%),
+		0 8px 8px -4px oklch(0.2 0.02 var(--tint-h) / 5%), 0 16px 16px -8px oklch(0.2 0.02 var(--tint-h) / 6%),
+		0 32px 32px -16px oklch(0.2 0.02 var(--tint-h) / 7%), 0 48px 64px -24px oklch(0.2 0.02 var(--tint-h) / 10%);
+	--backdrop: oklch(0.2 0.02 var(--tint-h) / 18%);
+
+	/* code: six roles, comments in a tinted grey */
+	--sh-fn: oklch(0.52 0.13 var(--accent-h));
+	--sh-str: oklch(0.52 0.12 160);
+	--sh-key: oklch(0.52 0.19 300);
+	--sh-prop: oklch(0.5 0.17 262);
+	--sh-num: oklch(0.55 0.15 20);
+	--sh-com: oklch(0.62 0.015 var(--tint-h));
+
+	--font-sans: 'Instrument Sans Variable', -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
+		Arial, sans-serif;
+	--font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+	--text-display: clamp(2rem, 1.35rem + 2.2vw, 3.25rem);
+	--text-title: 1.75rem;
+	--text-heading: 1.125rem;
+	--text-body: 0.9375rem;
+	--text-lead: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
+	--text-nav: 0.875rem;
+	--text-small: 0.8125rem;
+
+	--measure: clamp(36rem, calc(36rem + (100vw - 90rem) * 0.25), 44rem);
+	--gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+	--radius-sm: 4px;
+	--radius-item: 6px;
+	--radius-panel: 12px;
+	--radius-frame: 16px;
+	--radius-dialog: 22px;
+
+	--dur-hover: 100ms;
+	--dur: 150ms;
+	--ease: cubic-bezier(0.4, 0, 0.2, 1);
+	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+
+	color-scheme: light;
+}
+
+/* Dark is its own palette. app.html sets data-mode from the reader's choice,
+ * or from the system when they haven't chosen. */
+:root[data-mode='dark'] {
+	--ink: oklch(0.93 0.006 var(--tint-h));
+	--paper: oklch(0.175 0.009 var(--tint-h));
+	--surface: oklch(0.215 0.011 var(--tint-h));
+	--soft: color-mix(in oklab, var(--ink) 66%, transparent);
+	--muted: oklch(0.58 0.012 var(--tint-h));
+	--rule: color-mix(in oklab, var(--ink) 13%, transparent);
+	--wash: color-mix(in oklab, var(--ink) 7%, transparent);
+	/* lit from above: the top edge is the brighter one */
+	--edge-top: color-mix(in oklab, var(--ink) 16%, transparent);
+	--edge-bottom: color-mix(in oklab, var(--ink) 7%, transparent);
+	--accent-ink: oklch(0.8 0.13 var(--accent-h));
+	--focus: oklch(0.72 0.15 var(--focus-h));
+	--selection: color-mix(in oklab, var(--accent) 38%, var(--paper));
+	--hover: color-mix(in oklab, var(--accent) 10%, var(--surface));
+	--shadow-surface: 0 1px 1px #0003, 0 2px 2px -1px #0003, 0 4px 6px -3px #0000003d;
+	--shadow-raised: 0 0 0 0.5px oklch(0.93 0.006 var(--tint-h) / 9%), inset 0 1px 0 oklch(0.93 0.006 var(--tint-h) / 5%),
+		0 2px 2px -1px #0000004d, 0 4px 4px -2px #0000004d, 0 8px 8px -4px #00000040,
+		0 16px 16px -8px #00000040, 0 32px 48px -16px #00000059;
+	--shadow-dialog: 0 0 0 1px oklch(0.93 0.006 var(--tint-h) / 10%), inset 0 1px 0 oklch(0.93 0.006 var(--tint-h) / 5%),
+		0 2px 2px -1px #0000004d, 0 4px 4px -2px #0000004d, 0 8px 8px -4px #0000004d,
+		0 16px 16px -8px #0000004d, 0 32px 32px -16px #0000004d, 0 48px 64px -24px #0006;
+	--backdrop: #00000073;
+	--sh-fn: oklch(0.8 0.13 var(--accent-h));
+	--sh-str: oklch(0.78 0.11 160);
+	--sh-key: oklch(0.75 0.14 300);
+	--sh-prop: oklch(0.75 0.12 262);
+	--sh-num: oklch(0.75 0.13 20);
+	--sh-com: oklch(0.6 0.015 var(--tint-h));
+	color-scheme: dark;
+}
+
+@media (forced-colors: active) {
+	:root {
+		--focus: Highlight;
+	}
+}
+
+/* ---------- base ---------- */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+body {
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--font-sans);
+	font-size: var(--text-body);
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	min-height: 100dvh;
+}
+
+::selection {
+	background: var(--selection);
+	color: var(--ink);
+}
+
+input,
+textarea {
+	caret-color: var(--accent);
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-weight: 500;
+	text-wrap: balance;
+}
+
+p,
+li,
+dd,
+figcaption,
+td {
+	text-wrap: pretty;
+}
+
+a {
+	color: inherit;
+}
+
+img,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+button {
+	font: inherit;
+	color: inherit;
+	background: none;
+	border: 0;
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+
+code,
+kbd,
+pre,
+samp {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+}
+
+kbd {
+	display: inline-grid;
+	place-items: center;
+	min-width: 1.5em;
+	padding: 0 0.35em;
+	border-radius: var(--radius-sm);
+	background: var(--wash);
+	color: var(--soft);
+	font-size: 0.8125em;
+	line-height: 1.6;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* A panel on paper: gradient edge, not a border. */
+.edge {
+	--fill: var(--surface);
+	background:
+		linear-gradient(var(--fill), var(--fill)) padding-box,
+		linear-gradient(to bottom, var(--edge-top), var(--edge-bottom)) border-box;
+	border: 1px solid transparent;
+}
+
+.eyebrow {
+	font-size: var(--text-small);
+	color: var(--muted);
+	letter-spacing: 0;
+}
+
+/* ---------- shiki, css-variables theme ---------- */
+
+.shiki {
+	--shiki-foreground: var(--ink);
+	--shiki-background: transparent;
+	--shiki-token-keyword: var(--sh-key);
+	--shiki-token-function: var(--sh-fn);
+	--shiki-token-string: var(--sh-str);
+	--shiki-token-string-expression: var(--sh-str);
+	--shiki-token-constant: var(--sh-num);
+	--shiki-token-parameter: var(--ink);
+	--shiki-token-punctuation: var(--soft);
+	--shiki-token-link: var(--sh-prop);
+	--shiki-token-comment: var(--sh-com);
+}
+
+/* ---------- article prose (docs and long-form) ---------- */
+
+.prose {
+	color: var(--soft);
+	font-size: var(--text-body);
+	line-height: 1.6;
+}
+
+.prose > * + * {
+	margin-top: 1.1rem;
+}
+
+.prose > .lead {
+	color: var(--ink);
+	font-size: 1.0625rem;
+	line-height: 1.5;
+}
+
+.prose h2 {
+	color: var(--ink);
+	font-size: var(--text-heading);
+	line-height: 1.3;
+	letter-spacing: -0.015em;
+	padding-top: 1.5rem;
+}
+
+.prose h3 {
+	color: var(--ink);
+	font-size: 1rem;
+	line-height: 1.35;
+	letter-spacing: -0.01em;
+	padding-top: 0.5rem;
+}
+
+.prose strong {
+	color: var(--ink);
+	font-weight: 500;
+}
+
+.prose a {
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: var(--faint);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	transition: text-decoration-color var(--dur-hover);
+}
+
+.prose a:hover {
+	text-decoration-color: currentColor;
+}
+
+.prose :not(pre) > code {
+	color: var(--ink);
+	background: var(--wash);
+	border-radius: var(--radius-sm);
+	padding: 0.1em 0.35em;
+	font-size: 0.85em;
+	overflow-wrap: anywhere;
+}
+
+.prose ul,
+.prose ol {
+	padding-left: 1.25rem;
+}
+
+.prose ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.prose ul > li {
+	position: relative;
+	padding-left: 1.1rem;
+}
+
+.prose ul > li::before {
+	content: '';
+	position: absolute;
+	left: 0.2rem;
+	top: 0.68em;
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background: var(--faint);
+}
+
+.prose ol {
+	font-variant-numeric: tabular-nums;
+}
+
+.prose ol > li::marker {
+	color: var(--muted);
+}
+
+.prose li + li {
+	margin-top: 0.35rem;
+}
+
+/* heading anchors: quiet until the heading is hovered or the link focused */
+.prose .anchor {
+	display: inline-block;
+	margin-left: 0.4rem;
+	color: var(--muted);
+	opacity: 0;
+	text-decoration: none;
+	transition: opacity var(--dur-hover), color var(--dur-hover);
+}
+
+.prose :is(h2, h3):hover .anchor,
+.prose .anchor:focus-visible {
+	opacity: 1;
+}
+
+.prose .anchor:hover {
+	color: var(--ink);
+}
+
+@media (hover: none) {
+	.prose .anchor {
+		opacity: 1;
+		color: var(--faint);
+	}
+}
+
+/* arrival at an anchor: a short accent sweep across the heading */
+.prose :is(h2, h3):target {
+	background: linear-gradient(105deg, transparent 30%, var(--mark) 50%, transparent 70%) no-repeat;
+	background-size: 250% 100%;
+	background-position: 100% 0;
+	animation: sweep 900ms var(--ease-out-expo) 1;
+	border-radius: var(--radius-sm);
+}
+
+@keyframes sweep {
+	from {
+		background-position: 100% 0;
+	}
+	to {
+		background-position: -50% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.prose :is(h2, h3):target {
+		animation: none;
+		background: none;
+	}
+}
+
+.prose .code {
+	position: relative;
+	border-radius: var(--radius-panel);
+	box-shadow: var(--shadow-surface);
+}
+
+.prose pre {
+	overflow-x: auto;
+	padding: 0.7rem 0.95rem;
+	padding-right: 2.75rem;
+	font-size: 0.8125rem;
+	line-height: 1.6;
+	color: var(--ink);
+	scrollbar-width: thin;
+}
+
+.prose pre code {
+	font-size: inherit;
+}
+
+.prose .copy {
+	position: absolute;
+	top: 0.4rem;
+	right: 0.4rem;
+	width: 1.75rem;
+	height: 1.75rem;
+	display: grid;
+	place-items: center;
+	border-radius: 999px;
+	background: var(--surface);
+	color: var(--muted);
+	opacity: 0;
+	transition:
+		color var(--dur-hover),
+		opacity var(--dur-hover);
+}
+
+.prose .code:hover .copy,
+.prose .copy:focus-visible,
+.prose .copy[data-copied] {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.prose .copy {
+		opacity: 1;
+	}
+}
+
+.prose .copy:hover,
+.prose .copy:focus-visible {
+	color: var(--ink);
+}
+
+.prose .copy svg {
+	width: 15px;
+	height: 15px;
+}
+
+.prose .copy .done,
+.prose .copy[data-copied] .idle {
+	display: none;
+}
+
+.prose .copy[data-copied] .done {
+	display: block;
+}
+
+/* tables sit in a panel and may be wider than the measure */
+.prose .table {
+	border-radius: var(--radius-panel);
+	box-shadow: var(--shadow-surface);
+	overflow-x: auto;
+	font-size: var(--text-nav);
+	line-height: 1.45;
+}
+
+@media (min-width: 74rem) {
+	.prose .table.wide {
+		margin-right: -6rem;
+	}
+}
+
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.prose th {
+	text-align: left;
+	font-weight: 400;
+	color: var(--muted);
+	padding: 0.55rem 0.9rem;
+	border-bottom: 1px solid var(--rule);
+}
+
+.prose td {
+	padding: 0.6rem 0.9rem;
+	vertical-align: top;
+	border-top: 1px solid var(--rule);
+}
+
+.prose tr:first-child td {
+	border-top: 0;
+}
+
+.prose td:first-child {
+	color: var(--ink);
+	white-space: nowrap;
+}
+
+.prose blockquote {
+	padding-left: 1rem;
+	border-left: 2px solid var(--rule);
+}
