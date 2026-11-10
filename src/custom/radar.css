@@ -1,0 +1,42 @@
+/* radar's own state colours, as the pane derives them, and the inline state
+ * marks the docs use. Light first, then dark. */
+:root {
+	--st-blocked: oklch(0.72 0.15 75);
+	--st-error: oklch(0.6 0.19 27);
+	--st-done: oklch(0.55 0.17 262);
+	--st-ring: color-mix(in oklab, var(--ink) 55%, var(--surface));
+	--st-idle: color-mix(in oklab, var(--ink) 32%, var(--surface));
+}
+
+:root[data-mode='dark'] {
+	--st-blocked: oklch(0.8 0.14 80);
+	--st-error: oklch(0.7 0.16 27);
+	--st-done: oklch(0.7 0.13 262);
+}
+
+.mark {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	vertical-align: 0.02em;
+	margin-right: 0.25rem;
+}
+.mark.blocked {
+	background: var(--st-blocked);
+}
+.mark.error {
+	background: var(--st-error);
+}
+.mark.done {
+	background: var(--st-done);
+}
+.mark.working {
+	border: 1.5px solid var(--st-ring);
+}
+.mark.idle {
+	width: 6px;
+	height: 6px;
+	margin: 0 0.4rem 0 0.15rem;
+	background: var(--st-idle);
+}
