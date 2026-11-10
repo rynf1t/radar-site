@@ -4,7 +4,7 @@
 	let { wide = false }: { wide?: boolean } = $props();
 </script>
 
-<button type="button" class={['trigger', 'edge', { wide }]} onclick={search.show} aria-keyshortcuts="Meta+K">
+<button type="button" class={['trigger', 'edge', { wide }]} onclick={search.show} aria-label="Search" aria-keyshortcuts="Meta+K">
 	<svg viewBox="0 0 16 16" aria-hidden="true">
 		<circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5" />
 		<path d="m10.5 10.5 3.25 3.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />

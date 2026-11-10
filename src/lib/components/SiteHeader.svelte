@@ -15,8 +15,8 @@
 <header class="header">
 	<Wordmark />
 	<nav aria-label="Site">
-		{#each links as l (l.href)}
-			<a href={href(l.href)} aria-current={page.url.pathname.startsWith(href(l.match)) ? 'page' : undefined}>{l.label}</a>
+		{#each links as l, i (l.href)}
+			<a href={href(l.href)} class={{ extra: i > 0 }} aria-current={page.url.pathname.startsWith(href(l.match)) ? 'page' : undefined}>{l.label}</a>
 		{/each}
 		<a href={site.repo} class="gh">GitHub</a>
 		<SearchTrigger />
@@ -53,12 +53,27 @@
 		color: var(--ink);
 	}
 
+	.header :global(.wordmark) {
+		flex: none;
+	}
+
+	/* Phones keep Docs, search and the switch. The other links are in the footer. */
 	@media (max-width: 40rem) {
 		nav {
-			gap: 1rem;
+			gap: 0.75rem;
 		}
-		.gh {
+		.gh,
+		.extra {
 			display: none;
+		}
+		nav :global(.trigger span),
+		nav :global(.trigger kbd) {
+			display: none;
+		}
+		nav :global(.trigger) {
+			width: 2rem;
+			padding: 0;
+			justify-content: center;
 		}
 	}
 </style>
