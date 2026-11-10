@@ -142,6 +142,8 @@ export function nav(): NavGroup[] {
 /** The Markdown twin: front matter, then the body with links pointing at other twins. */
 export function markdownTwin(d: Pick<Doc, 'title' | 'description' | 'path' | 'body'>) {
 	const body = d.body
+		// Empty decorative spans, like coloured dots, mean nothing as Markdown.
+		.replace(/<span[^>]*><\/span>\s*/g, '')
 		.replace(/\]\((\/docs\/[\w/-]+)(#[\w-]+)?\)/g, (_, p, h = '') => `](${site.origin}${p}.md${h})`);
 	return `---\ntitle: ${JSON.stringify(d.title)}\ndescription: ${JSON.stringify(d.description)}\ncanonical_url: ${site.origin}${d.path}\n---\n\n# ${d.title}\n\n${body}`;
 }
