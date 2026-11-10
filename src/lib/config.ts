@@ -45,6 +45,8 @@ export type SiteConfig = {
 	questions: { q: string; a: string }[];
 	/** Extra header links, after Docs. */
 	nav?: Link[];
+	/** Who made it, linked from the footer, such as { label: 'by Ryan', href: 'https://itsryan.me' }. */
+	author?: Link;
 };
 
 /** The mark when site.config.ts has none: a dot in the accent. */

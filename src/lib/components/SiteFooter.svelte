@@ -9,6 +9,7 @@
 	<span class="rule" aria-hidden="true"></span>
 	<a href={href('/llms.txt')} data-sveltekit-reload>llms.txt</a>
 	<a href={site.repo}>GitHub</a>
+	{#if site.author}<a href={site.author.href}>{site.author.label}</a>{/if}
 </footer>
 
 <style>

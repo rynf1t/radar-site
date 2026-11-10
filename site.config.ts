@@ -93,6 +93,8 @@ radar skill install`
 		}
 	],
 
+	author: { label: 'by Ryan', href: 'https://itsryan.me' },
+
 	questions: [
 		{
 			q: 'What does it need?',
